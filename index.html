@@ -134,8 +134,9 @@
     </section>
 
     <section class="card">
-      <h2>Join Us</h2>
-      <form id="memberForm" onsubmit="return addMember(event)">
+      <h2>Wanna join us? Apply now!</h2>
+      <form action="https://api.web3forms.com/submit" id="memberForm" onsubmit="return addMember(event)">
+        <input type="hidden" name="access_key" value="77664dba-0e91-4d13-aa8b-0bff75deda8d">
         <input id="nameInput" placeholder="Full Name" required />
         <input id="roleInput" placeholder="Role (Designer / Developer)" />
         <textarea id="bioInput" rows="3" placeholder="Short bio"></textarea>
@@ -214,3 +215,4 @@
   </script>
 </body>
 </html>
+
