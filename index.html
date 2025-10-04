@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Teklingo Club</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Orbitron', Arial, sans-serif;
+      background: linear-gradient(135deg, #0f2027, #2c5364, #1a2980, #26d0ce);
+      min-height: 100vh;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 2.5rem;
+      color: #fff;
+      text-shadow: 0 0 10px #00ffe7, 0 0 20px #00ffe7, 0 0 40px #00ffe7;
+      animation: neon-flicker 2s infinite alternate;
+    }
+    @keyframes neon-flicker {
+      0%, 100% {opacity: 1;}
+      50% {opacity: 0.8;}
+    }
+
+    .glow-bar {
+      width: 80vw;
+      height: 6px;
+      margin: 0 auto 1.5rem auto;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #ff00cc, #3333ff, #00ffe7, #ff00cc);
+      box-shadow: 0 0 20px 5px #00ffe7, 0 0 40px 10px #ff00cc;
+      animation: bar-glow 3s linear infinite;
+    }
+    @keyframes bar-glow {
+      0% { filter: brightness(1);}
+      50% { filter: brightness(1.5);}
+      100% { filter: brightness(1);}
+    }
+
+    .container {max-width: 1100px; margin: auto; padding: 1rem;}
+
+    .card {
+      background: rgba(20,20,40,0.85);
+      border-radius: 20px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      box-shadow: 0 0 30px 5px #00ffe7, 0 0 10px #ff00cc;
+    }
+    h2 {margin-bottom: 0.5rem; text-shadow: 0 0 8px #00ffe7, 0 0 16px #ff00cc;}
+
+    .members-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .member-card {
+      background: rgba(10, 10, 30, 0.9);
+      border-radius: 20px;
+      width: 260px;
+      padding: 1.5rem;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 0 20px #00ffe7, 0 0 10px #ff00cc;
+      transition: transform 0.3s, box-shadow 0.3s;
+      animation: fade-in 1s ease;
+    }
+    .member-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 50px #ff00cc, 0 0 30px #00ffe7;
+    }
+    @keyframes fade-in {
+      from {opacity: 0; transform: translateY(30px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    .member-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #00ffe7;
+      margin-bottom: 0.8rem;
+      box-shadow: 0 0 20px #ff00cc, 0 0 10px #00ffe7;
+    }
+    .member-name {font-size: 1.3rem; font-weight: bold; margin-bottom: 0.3rem;}
+    .member-role {font-size: 1rem; color: #b2fefa; margin-bottom: 0.3rem;}
+    .member-bio {font-size: 0.9rem; opacity: 0.85;}
+
+    /* Form */
+    form {margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;}
+    input, textarea, button {
+      padding: 0.6rem; border-radius: 8px; border: none; font-family: inherit;
+    }
+    input, textarea {
+      background: rgba(255,255,255,0.1); color: #fff;
+    }
+    button {
+      background: linear-gradient(90deg, #ff00cc, #00ffe7);
+      color: #111; font-weight: bold; cursor: pointer;
+      box-shadow: 0 0 20px #00ffe7, 0 0 10px #ff00cc;
+    }
+    button:hover {filter: brightness(1.2);}
+  </style>
+</head>
+<body>
+  <header>✨ Teklingo Club ✨</header>
+<video autoplay loop muted playsinline style="position:fixed;top:0;left:0;width:100vw;height:100vh;object-fit:cover;z-index:-1;">
+    <source src="fotor-ai-20251002145159.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+
+  <div class="container">
+    <section class="card">
+      <h2>About the Club</h2>
+      <p>We are a student-led club focused on creative collaboration: web & app design, films, photography, and tech projects. We run workshops, showcases, and hack-events to build, learn, and grow together.</p>
+    </section>
+
+    <section class="card">
+      <h2>Purpose</h2>
+      <ul>
+        <li>Learn practical skills (design, dev, production).</li>
+        <li>Collaborate on real-world projects.</li>
+        <li>Showcase work & get feedback.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Join Us</h2>
+      <form id="memberForm" onsubmit="return addMember(event)">
+        <input id="nameInput" placeholder="Full Name" required />
+        <input id="roleInput" placeholder="Role (Designer / Developer)" />
+        <textarea id="bioInput" rows="3" placeholder="Short bio"></textarea>
+        <input id="imgInput" type="file" accept="image/*" />
+        <button type="submit">Add Member</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Member Directory</h2>
+      <div id="membersGrid" class="members-grid"></div>
+    </section>
+  </div>
+
+  <script>
+    const members = [];
+    const membersGrid = document.getElementById('membersGrid');
+
+    function addMember(e) {
+      e.preventDefault();
+      const name = document.getElementById('nameInput').value.trim();
+      const role = document.getElementById('roleInput').value.trim();
+      const bio = document.getElementById('bioInput').value.trim();
+      const file = document.getElementById('imgInput').files[0];
+
+      if (!name) return alert('Name required!');
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          pushMember({name, role, bio, img: ev.target.result});
+        };
+        reader.readAsDataURL(file);
+      } else {
+        pushMember({name, role, bio, img: null});
+      }
+
+      document.getElementById('memberForm').reset();
+    }
+
+    function pushMember(obj) {
+      members.push(obj);
+      renderMembers();
+    }
+
+    function renderMembers() {
+      membersGrid.innerHTML = '';
+      members.forEach(m => {
+        const el = document.createElement('div');
+        el.className = 'member-card';
+        const imgHtml = m.linkedin
+          ? `<a href="${m.linkedin}" target="_blank" rel="noopener noreferrer"><img class="member-img" src="${m.img || 'https://via.placeholder.com/100'}" alt=""></a>`
+          : `<img class="member-img" src="${m.img || 'https://via.placeholder.com/100'}" alt="">`;
+        const nameHtml = m.linkedin
+          ? `<a href="${m.linkedin}" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;">${m.name}</a>`
+          : m.name;
+        el.innerHTML = `
+          ${imgHtml}
+          <div class="member-name">${nameHtml}</div>
+          <div class="member-role">${m.role || 'Member'}</div>
+          <div class="member-bio">${m.bio || ''}</div>
+        `;
+        membersGrid.appendChild(el);
+      });
+    }
+
+    pushMember({name:'Mohit Sapat',role:'President',bio:'Loves coding, music, and events.',img:'https://media.licdn.com/dms/image/v2/D4E03AQFnvOR7eya4KA/profile-displayphoto-shrink_400_400/B4EZV1BR_qG0Ag-/0/1741425026109?e=1762387200&v=beta&t=vvniMzTZ45ky1quyPOHII9bD5KLp2bRdKtThj5NOegI', linkedin:'https://www.linkedin.com/in/mohitsapat18?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BrZcZHG4WT3yp5vGadLqgdw%3D%3D'});
+    pushMember({name:'Sarthak Wadegaonkar',role:'Vice President',bio:'Passionate about art & tech.',img:'https://media.licdn.com/dms/image/v2/D4D03AQF4c0C-UKKtVw/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1725197927314?e=1762387200&v=beta&t=Xv11KPyjTiqWV2pRqY2wvjQM94qk9ESl16PS6OM33mI', linkedin:'https://www.linkedin.com/in/sarthak-wadegaonkar?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BMKxPPaK8SLumtxEbfFu7kA%3D%3D'});
+    pushMember({name:'Aditya Garud',role:'Technical Lead',bio:'Passionate about art & tech.',img:'https://media.licdn.com/dms/image/v2/D5603AQH1F4gbKtxhNQ/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1725377206133?e=1762387200&v=beta&t=5j9SOyBPo97ah7HCS1GHgZYcmEGub_VB9y3aGwS1Z5U', linkedin:'https://www.linkedin.com/in/adityakgarud?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BEssxZYRIS%2FKtBRL3E1FrnA%3D%3D'});
+    pushMember({name:'Nirali Sancheti',role:'Project Lead',bio:'Passionate about art & tech.',img:'https://media.licdn.com/dms/image/v2/D4D03AQGz9KjU_fw8Dg/profile-displayphoto-shrink_100_100/B4DZVSga9KGcAU-/0/1740845987232?e=1762387200&v=beta&t=gwcfaYD5mv5HHBPEEiUUqIgOPcRUmsPM53dgK-WfFpA', linkedin:'https://www.linkedin.com/in/nirali-sancheti-250253288?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BV%2F3aQaWyTnS7NP9RBsPx7g%3D%3D'});
+    pushMember({name:'Aishwarya Parakkattil',role:'Game Development Lead',bio:'Passionate about art & tech.',img:'https://wallpapers.com/images/hd/colorful-controller-gamer-logo-ymcwzv3fuzx9mvwq.jpg', linkedin:'https://www.linkedin.com/in/aishwarya-parakkattil-77a63b352?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BYqB6rxwNSJqStsX7ApE%2FFg%3D%3D'});
+    pushMember({name:'Chaitanya Kherdikar',role:'Web Development Lead',bio:'Passionate about art & tech.',img:'https://cdn.dribbble.com/userupload/16505523/file/original-ead560979b865f6fa8273e27291b810d.jpg?resize=400x0', linkedin:'https://www.linkedin.com/in/chaitanya-kherdikar-3b6320381?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BUYhBuytETcqQJqwEMmkT2Q%3D%3D'});
+    pushMember({name:'Sushrut Ingle',role:'General Secretary',bio:'Passionate about art & tech.',img:'https://media.licdn.com/dms/image/v2/D4D03AQGLWROT1ttzyg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1684493680281?e=1762387200&v=beta&t=ewDiEqQYNkAx7N_7rvFjDRN88Qbj_G2_IFMa80-rLjk', linkedin:'https://www.linkedin.com/in/sushrut-ingle-42486a277?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BkcERqHfLQjGftYhUqn8Tzg%3D%3D'});
+    pushMember({name:'Ujwal Bajaj',role:'Manager',bio:'Passionate about art & tech.',img:'Screenshot 2025-10-02 173111.png', linkedin:'https://www.linkedin.com/in/ujwal-bajaj-62964b320?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BxRnrh0zVSTeh4l2i39ci8Q%3D%3D'});
+    pushMember({name:'Anjali Nayak',role:'Core Member',bio:'Passionate about art & tech.',img:'https://media.licdn.com/dms/image/v2/D5603AQEo167lBH3Law/profile-displayphoto-scale_100_100/B56ZislBoWG0Ac-/0/1755242044515?e=1762387200&v=beta&t=_ip6EyaN8YH35rhgdch5pOYXc_NaQuz-G7IMP_uFebM', linkedin:'https://www.linkedin.com/in/anjali-nayak-790a7a321?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BGc52vw%2FPQpyGEXGt0nUYyw%3D%3D'});
+  </script>
+</body>
+</html>
