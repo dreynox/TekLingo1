@@ -155,25 +155,7 @@
     const members = [];
     const membersGrid = document.getElementById('membersGrid');
 
-    function addMember(e) {
-      e.preventDefault();
-      const name = document.getElementById('nameInput').value.trim();
-      const role = document.getElementById('roleInput').value.trim();
-      const bio = document.getElementById('bioInput').value.trim();
-      const file = document.getElementById('imgInput').files[0];
-
-      if (!name) return alert('Name required!');
-
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(ev) {
-          pushMember({name, role, bio, img: ev.target.result});
-        };
-        reader.readAsDataURL(file);
-      } else {
-        pushMember({name, role, bio, img: null});
-      }
-
+   
       document.getElementById('memberForm').reset();
     }
 
@@ -215,5 +197,6 @@
   </script>
 </body>
 </html>
+
 
 
